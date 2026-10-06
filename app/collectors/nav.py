@@ -57,6 +57,8 @@ class NavCollector(BaseCollector):
             if not description:
                 continue
 
+            if 
+
             job = JobPosting(
                 title=item['title'],
                 company=feed_entry['businessName'],

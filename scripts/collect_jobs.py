@@ -1,9 +1,14 @@
 from app.collectors.nav import NavCollector
 from app.database.repository import JobRepository
 
-collector = NavCollector()
+def main():
+    collector = NavCollector()
 
-jobs = collector.collect()
+    jobs = collector.collect()
 
-for job in jobs:
-    JobRepository().insert(job)
+    for job in jobs:
+        JobRepository().insert(job)
+
+
+if __name__ == "__main__":
+    main()

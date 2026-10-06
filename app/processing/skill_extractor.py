@@ -29,7 +29,7 @@ SKILLS = [
     "Git",
     "CUDA",
     "Data Visualization",
-    "Deep Learning"
+    "Deep Learning",
     "Computer Vision",
     "Data Engineering",
     "MLOps",

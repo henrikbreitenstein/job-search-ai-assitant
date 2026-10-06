@@ -1,3 +1,4 @@
+from sqlite3 import Cursor
 from requests import get
 from app.database.session import get_connection
 from app.models import JobPosting
@@ -40,8 +41,15 @@ class JobRepository:
                 company,
                 location,
                 url,
-                description
+                description,
+                skill_score,
+                fit_score,
+                seniority,
+                years_experience,
+                analysis,
+                processed
             FROM jobs
+            ORDER BY fit_score DESC
         ''')
 
         rows = cursor.fetchall()
@@ -114,7 +122,13 @@ class JobRepository:
             company=row[2],
             location=row[3],
             url=row[4],
-            description=row[5]
+            description=row[5],
+            skill_score=row[6],
+            fit_score=row[7],
+            seniority=row[8],
+            years_experience=row[9],
+            analysis=row[10],
+            processed=bool(row[11])
         )
 
 
@@ -141,7 +155,7 @@ class JobRepository:
                 skill
             )
             VALUES (?, ?)
-        ''')
+        ''', (job_id, skill))
 
         conn.commit()
         conn.close()
@@ -162,6 +176,93 @@ class JobRepository:
 
         return [row[0] for row in rows]
 
+    def update_score(self, job_id, score):
 
+        conn = get_connection()
 
+        cursor = conn.execute('''
+            UPDATE jobs
+            SET score = ?
+            WHERE id = ?
+        ''', (score, job_id))
+
+        conn.commit()
+        conn.close()
+
+    def update_analysis(self, job_id, result):
+
+        conn = get_connection()
+
+        cursor = conn.execute('''
+            UPDATE jobs
+            SET 
+                fit_score = ?
+                seniority = ?
+                years_experience = ?
+                analysis = ?
+            WHERE id = ?
+        ''', (result['fit_score'],
+              result['seniority'],
+              result['years_experience'],
+              result['analysis'],
+              job_id))
+
+        conn.commit()
+        conn.close()
+
+    def get_unprocessed_above_score(self, threshold):
+
+        conn = get_connection()
+
+        cursor = conn.execute("""
+            SELECT
+                id,
+                title,
+                company,
+                location,
+                url,
+                description
+            FROM jobs
+            WHERE processed = 0
+            AND score >= ?
+            ORDER BY score DESC
+        """, (threshold,))
+
+        rows = cursor.fetchall()
+
+        conn.close()
+
+        return [self._row_to_job(row) for row in rows]
+
+    def get_unreported_above_fit_score(self, threshold):
+
+        conn = get_connection()
+
+        cursor = conn.execute(
+        '''
+            SELECT *
+            FROM jobs
+            WHERE reported = 0
+                AND fit_score >= ?
+            ORDER BY fit_score DESC
+        ''')
+
+        rows = cursor.fetchall()
+
+        conn.close()
+
+        return [self._row_to_job(row) for row in rows]
+
+    def mark_reported(self, job_id):
+
+        conn = get_connection()
+
+        cursor = conn.execute('''
+            UPDATE jobs
+            SET reported = 1
+            WHERE id = ?
+        ''', (job_id,))
+
+        conn.commit()
+        conn.close()
 
