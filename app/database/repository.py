@@ -95,7 +95,14 @@ class JobRepository:
                 company,
                 location,
                 url,
-                description
+                description,
+                skill_score,
+                fit_score,
+                analysis,
+                reported,
+                seniority,
+                years_experience,
+                processed
             FROM jobs
             WHERE processed = 0
         ''')
@@ -182,7 +189,7 @@ class JobRepository:
 
         cursor = conn.execute('''
             UPDATE jobs
-            SET score = ?
+            SET skill_score = ?
             WHERE id = ?
         ''', (score, job_id))
 
@@ -196,9 +203,9 @@ class JobRepository:
         cursor = conn.execute('''
             UPDATE jobs
             SET 
-                fit_score = ?
-                seniority = ?
-                years_experience = ?
+                fit_score = ?,
+                seniority = ?,
+                years_experience = ?,
                 analysis = ?
             WHERE id = ?
         ''', (result['fit_score'],
@@ -245,7 +252,7 @@ class JobRepository:
             WHERE reported = 0
                 AND fit_score >= ?
             ORDER BY fit_score DESC
-        ''')
+        ''', (threshold,))
 
         rows = cursor.fetchall()
 

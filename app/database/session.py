@@ -36,7 +36,8 @@ def create_tables():
             seniority TEXT,
             years_experience INTEGER,
             analysis TEXT,
-            processed INTEGER DEFAULT 0
+            processed INTEGER DEFAULT 0,
+            reported INTEGER DEFAULT 0
         )
     ''')
 
@@ -47,6 +48,14 @@ def create_tables():
             UNIQUE(job_id, skill)
         )
     ''')
+
+    conn.commit()
+    conn.close()
+if __name__ == "__main__":
+    conn = get_connection()
+    conn.execute(
+        '''DELETE FROM jobs'''
+    )
 
     conn.commit()
     conn.close()

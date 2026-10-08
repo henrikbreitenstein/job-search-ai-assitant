@@ -6,7 +6,8 @@ SENIOR_TITLE_KEYWORDS = {
     "staff",
     "head of",
     "director",
-    "chief"
+    "chief",
+    "PhD"
 }
 
 SKILLS = [
@@ -42,6 +43,9 @@ SKILLS = [
 ]
 
 SKILL_ALIASES = {
+
+    "AI": ["ai", "ki", "kunstelig inteligens", "artificial inteligence", "ki-utvikler", "ai-ingeniør", "ki-ingeniør"],
+
     "Python": [
         "python", "python3", "python programming", "py"
     ],
@@ -83,7 +87,7 @@ SKILL_ALIASES = {
         "data analysis", "data analytics",
         "dataanalyse", "analyse",
         "analytics", "eda",
-        "exploratory data analysis"
+        "exploratory data analysis", "estimation", "estimasjon", "estimator"
     ],
 
     "Statistical Modeling": [
